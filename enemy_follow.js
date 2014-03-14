@@ -20,10 +20,11 @@
     {
     renderer.material.color = Color.green;
     }
-    if(distance < attackRange)
-    {
-    attack ();
+	
+    if (distance < attackRange){
+		attack();
     }
+	
     if(isItAttacking)
     {
     renderer.material.color = Color.red;

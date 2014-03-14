@@ -55,19 +55,24 @@ function Update(){
 	}else if (Input.GetKeyDown(KeyCode.Space)){ //choosing a character
 		switch(currentPosition){
 			case(0):
-				PlayerPrefs.SetString("Char", "mage");
+				PlayerPrefs.SetString("Char", "mage_prefab");
+				PlayerPrefs.SetString("CharModel", "mage");
 				break;
 			case(1):
-				PlayerPrefs.SetString("Char", "warrior");
+				PlayerPrefs.SetString("Char", "knight_prefab");
+				PlayerPrefs.SetString("CharModel", "knight_rb");
 				break;
 			case(2):
-				PlayerPrefs.SetString("Char", "rogue");
+				PlayerPrefs.SetString("Char", "rogue_prefab");
+				PlayerPrefs.SetString("CharModel", "rogue");
 				break;
 			case(3):
-				PlayerPrefs.SetString("Char", "elemental");
+				PlayerPrefs.SetString("Char", "elemental_prefab");
+				PlayerPrefs.SetString("CharModel", "elemental");
 				break;
 			case(4):
-				PlayerPrefs.SetString("Char", "dwarf");
+				PlayerPrefs.SetString("Char", "dwarf_prefab");
+				PlayerPrefs.SetString("CharModel", "dwarf_CC");
 				break;
 		}
 		if (PlayerPrefs.HasKey("Level")){

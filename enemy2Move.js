@@ -6,7 +6,7 @@ var moveTime = 0.5;
 private var willmove = 0;
 private var rotAmt = 0;
 
-function Start () {
+function Start (){
 	var diceRoll = Random.Range(1,2);
 	if (diceRoll == 1){
 		rotAmt = 180;
