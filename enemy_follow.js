@@ -13,22 +13,18 @@
     if(distance < lookAtDistance)
     {
     isItAttacking = false;
-    renderer.material.color = Color.yellow;
+    
     lookAt ();
     }
     if(distance > lookAtDistance)
     {
-    renderer.material.color = Color.green;
+  
     }
-	
-    if (distance < attackRange){
-		attack();
-    }
-	
-    if(isItAttacking)
+    if(distance < attackRange)
     {
-    renderer.material.color = Color.red;
+    attack ();
     }
+    
     }
      
      
@@ -41,7 +37,7 @@
     function attack ()
     {
     isItAttacking = true;
-    renderer.material.color = Color.red;
+    
      
     transform.Translate(Vector3.forward * moveSpeed *Time.deltaTime);
     }
