@@ -1,7 +1,13 @@
 ﻿
-function OnTriggerEnter(other : Collider){
-	if (other.gameObject.tag == "playerCharacter"){
-		Debug.Log("dead");
-		Destroy(other.gameObject);
+function OnTriggerEnter(Trigger : Collider){
+	if (Trigger.tag == "playerCharacter"){
+		var playerInventory : playerController = Trigger.GetComponent(playerController);
+	
+		playerInventory.currentlyDying = true;
+		playerInventory.lives--;
+		
+		Application.LoadLevel(Application.loadedLevelName);
+		playerInventory.currentHealth = playerInventory.maxHealth;
+		playerInventory.currentlyDying = false;
 	}
 }

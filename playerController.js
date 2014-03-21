@@ -26,12 +26,12 @@ private var currentlyFalling : boolean = false;
 private var distancetoGround : float;
 private var jumpDelay : boolean = false;
 private var currentlyJumping : boolean = false;
+public static var currentlyDying : boolean = false;
 
 function Start(){
 	var modelName : String = PlayerPrefs.GetString("Char") + "(Clone)";
 	var modelChild : String = PlayerPrefs.GetString("CharModel");
 	newModel = transform.Find(modelName + "/" + modelChild);
-	newModel.transform.parent = gameObject.transform;
 	
 	distancetoGround = gameObject.collider.bounds.extents.y;
 	
@@ -45,7 +45,7 @@ function Start(){
 function OnCollisionEnter(hit: Collision){
 	if (hit.gameObject.tag == "enemy" && !currentlyFalling){
 		currentHealth = currentHealth - 1;
-		injuryWait();
+		injuryWait(2);
 	}else if (hit.gameObject.tag == "enemy" && currentlyFalling){
 		Destroy(hit.collider.gameObject);
 		rigidbody.velocity.y += bounceHeight;
@@ -54,14 +54,14 @@ function OnCollisionEnter(hit: Collision){
 		if (lives <= 0){
 			killDude();
 		}else{
-			lives = lives - 1;
+			lives--;
 			killDude();
 		}
 	}
 }
 
-function injuryWait(){
-	yield WaitForSeconds(2);
+function injuryWait(seconds){
+	yield WaitForSeconds(seconds);
 }
 
 function killDude(){
@@ -72,32 +72,42 @@ function killDude(){
 
 function Update(){
 		// x axis movement
-		if (Input.GetKey(KeyCode.A)){
-			if (rotatedMove){
-				transform.rotation.y = -100;
-			}else{
-				transform.rotation.y = -0.7;
-			}
-			transform.position += Vector3.left * Time.deltaTime * speed;
-			if (!currentlyFalling){
-				newModel.animation.Play("Walk");
-			}
-		}else if (Input.GetKey(KeyCode.D)){
-			if (rotatedMove){
-				transform.rotation.y = 0.3;
-			}else{
-				transform.rotation.y = 0.7;
-			}
-			transform.position += Vector3.right * Time.deltaTime * speed;
-			if (!currentlyFalling){
-				newModel.animation.Play("Walk");
+		if (currentlyDying == false){
+			if (Input.GetKey(KeyCode.A)){
+				if (rotatedMove){
+					transform.rotation.y = -100;
+				}else{
+					transform.rotation.y = -0.7;
+				}
+				transform.position += Vector3.left * Time.deltaTime * speed;
+				if (!currentlyFalling){
+					newModel.animation.Play("Walk");
+				}
+			}else if (Input.GetKey(KeyCode.D)){
+				if (rotatedMove){
+					transform.rotation.y = 0.3;
+				}else{
+					transform.rotation.y = 0.7;
+				}
+				transform.position += Vector3.right * Time.deltaTime * speed;
+				if (!currentlyFalling){
+					newModel.animation.Play("Walk");
+				}
 			}
 		}
+	
+	if (currentHealth <= 0){
+		newModel.animation.Stop("Idle");
 		
-	// idle / standing still
-	if (Input.anyKey == false && newModel.animation["Attack"].enabled == false 
-			&& newModel.animation["Take off"].enabled == false && newModel.animation["Falling"].enabled == false){
-		newModel.animation.CrossFade("Idle");
+		if (!currentlyDying){
+			newModel.animation.Play("Death");
+		}
+
+		currentlyDying = true;
+		injuryWait(5);
+		Application.LoadLevel(Application.loadedLevelName);
+		currentHealth = maxHealth;
+		currentlyDying = false;
 	}
 	
 	// attacking
@@ -109,6 +119,10 @@ function Update(){
 		if (Input.GetKey(KeyCode.Space)){
 			newModel.animation.CrossFade("Falling");
 			rigidbody.velocity.y += jumpSpeed;
+				var hitWall : RaycastHit;
+			if (Physics.Raycast(transform.position, transform.forward, hitWall, 0.5)){
+				rigidbody.velocity.y = 0;
+			}
 			currentlyFalling = true;
 		}	
 	}
@@ -118,7 +132,6 @@ function FixedUpdate(){
 	if (currentlyFalling){
 		rigidbody.velocity += gravity * Time.deltaTime;
 	}
-	//rigidbody.Move(velocity * Time.deltaTime);
 }
 	
 // Attacking
