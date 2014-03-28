@@ -2,14 +2,12 @@
 var selectorCapsule : Transform;
 var selectedButton : Texture;
 private var currentPosition : int = 0;
+private var whichLevel : String;
 
 // Level select
 function OnGUI(){
 	if (GUI.Button(Rect(10,10,110,50), "1. Courtyard")){
 		PlayerPrefs.SetString("Level", "level1");
-			if (PlayerPrefs.GetString("Level") == "level1"){
-				GUI.backgroundColor = Color.clear;
-			}
 	}
 	if (GUI.Button(Rect(130,10,110,50), "2. Statue Hall")){
 		PlayerPrefs.SetString("Level", "level2");
@@ -56,11 +54,11 @@ function Update(){
 		switch(currentPosition){
 			case(0):
 				PlayerPrefs.SetString("Char", "mage_prefab");
-				PlayerPrefs.SetString("CharModel", "mage");
+				PlayerPrefs.SetString("CharModel", "mage_CM");
 				break;
 			case(1):
 				PlayerPrefs.SetString("Char", "knight_prefab");
-				PlayerPrefs.SetString("CharModel", "knight_rb");
+				PlayerPrefs.SetString("CharModel", "knight_RB");
 				break;
 			case(2):
 				PlayerPrefs.SetString("Char", "rogue_prefab");
@@ -68,7 +66,7 @@ function Update(){
 				break;
 			case(3):
 				PlayerPrefs.SetString("Char", "elemental_prefab");
-				PlayerPrefs.SetString("CharModel", "elemental");
+				PlayerPrefs.SetString("CharModel", "elemental_AR");
 				break;
 			case(4):
 				PlayerPrefs.SetString("Char", "dwarf_prefab");
@@ -76,8 +74,11 @@ function Update(){
 				break;
 		}
 		if (PlayerPrefs.HasKey("Level")){
-		var whichLevel = PlayerPrefs.GetString("Level");
-			Application.LoadLevel(whichLevel);
+			whichLevel = PlayerPrefs.GetString("Level");
+		}else{
+			whichLevel = "level1";
 		}
+		
+		Application.LoadLevel(whichLevel);
 	}
 }
